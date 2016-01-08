@@ -1,4 +1,4 @@
-package group08home;
+package group08away;
 
 import robocode.*;
 import java.awt.Color;
@@ -10,7 +10,7 @@ import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 import java.awt.geom.Point2D;
 
-public class Sub2 extends TeamRobot
+public class Unit extends TeamRobot
 {
 	// デフォルトの弾のパワー
 	private static final double DEFAULTPOWER = 3.0;
@@ -33,7 +33,7 @@ public class Sub2 extends TeamRobot
 	public void run()
 	{
 		// 色の設定
-		setColors(new Color(96, 137, 34), new Color(244, 229, 191) ,new Color(255, 200, 200)); // body,gun,radar
+		setColors(Color.white, Color.white, Color.white); // body,gun,radar
 		/* 以下ではロボットと砲塔とレーダーの動きを全部一致するように設定している */
 		// ロボットの動きとガンの動きを合わせる
 		setAdjustGunForRobotTurn(true);

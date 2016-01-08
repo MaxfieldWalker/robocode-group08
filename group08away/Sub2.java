@@ -12,7 +12,10 @@ import java.awt.geom.Point2D;
 
 public class Sub2 extends TeamRobot
 {
+	// デフォルトの弾のパワー
 	private static final double DEFAULTPOWER = 3.0;
+	// 逃げるモードに移行する体力
+	private static final double NIGERUENERGY = 10.0;
 
 	// 基本の動く量
 	private int moveAmount = 50;
@@ -20,11 +23,12 @@ public class Sub2 extends TeamRobot
 	private double power = DEFAULTPOWER;
 	// 最後に存在した敵の角度
 	private double lastEnemyHeading = 0;
-
 	// 敵のリスト
 	private ArrayList<EnemyInfo> enemies = new ArrayList<EnemyInfo>();
 	// 最後に撃った弾の当たったロボット
 	private BulletHitRobot lastBulletHitRobot = null;
+	// 「逃げる」モード
+	private boolean nigeruMode = false;
 
 	public void run()
 	{
@@ -44,8 +48,12 @@ public class Sub2 extends TeamRobot
 	public void onScannedRobot(ScannedRobotEvent e)
 	{
 		// チームメンバーの場合は何もしない
-		if (isTeammate(e.getName()))
+		if (isTeammate(e.getName()) || nigeruMode)
+		{
+			setAhead(moveAmount);
+			setTurnLeftRadians(Math.PI / 12);
 			return;
+		}
 
 		// 敵リストにいなければ新たに追加
 		if (isUndiscoveredEnemy(e.getName()))
@@ -86,7 +94,19 @@ public class Sub2 extends TeamRobot
 
 		// 相対角度に変換した上で砲塔の向きを変える
 		setTurnGunRightRadians(Utils.normalRelativeAngle(Math.atan2(enemyX, enemyY) - getGunHeadingRadians()));
-		setFire(power);
+
+		// 残りエネルギーが少なくなったら「逃げる」モードに移行
+		if (power > this.getEnergy() - NIGERUENERGY)
+		{
+			nigeruMode = true;
+			moveAmount = -moveAmount;
+		}
+		// 逃げるモードなら撃たない
+		if (!nigeruMode)
+		{
+			setFire(power);
+		}
+
 		lastEnemyHeading = e.getHeadingRadians();
 
 		// 敵の居る方向へターンする
@@ -132,8 +152,9 @@ public class Sub2 extends TeamRobot
 				lastBulletHitRobot.incrementSeriesHitCount();
 				if (lastBulletHitRobot.getSeriesHitCount() > 3)
 				{
-					//パワーをブーストさせる
-					power = 1.0 * lastBulletHitRobot.getSeriesHitCount();
+					double desired = 1.0 * lastBulletHitRobot.getSeriesHitCount();
+					// パワーをブーストさせる
+					power = desired < this.getEnergy() - 1.0 ? desired : DEFAULTPOWER;
 					System.out.println("POWER BOOST (POWER: )" + power);
 				}
 			}
