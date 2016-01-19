@@ -1,0 +1,7 @@
+#Robocode robot team
+#Fri Dec 11 12:18:48 JST 2015
+team.members=communication.CommunicationLeader*,communication.CommunicationLeader*,communication.CommunicationLeader*
+team.author.name=fad
+robocode.version=1.9.2.4
+team.webpage=http\://sadf
+team.description=sfda

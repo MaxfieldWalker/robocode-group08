@@ -1,0 +1,6 @@
+#Robocode robot team
+#Fri Dec 18 12:33:22 JST 2015
+team.members=communication.CommunicationLeader*,communication.CommunicationLeader*,communication.CommunicationLeader*
+team.author.name=
+robocode.version=1.9.2.4
+team.description=\ 
